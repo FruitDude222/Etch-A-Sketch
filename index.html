@@ -8,47 +8,88 @@
     <title>Etch-A-Sketch</title>
 </head>
 <body>
-    <div class="container">
+    <button id="button">
+        Clear
+    </button>
+    <div id="container">
     </div>
 </body>
     <script>
-        const container = document.querySelector('.container');
+        const container = document.querySelector('#container');
         let temp = "";
+        let hoverCount = 0;
 
         function getTemplateColumns(colNum){
             this.colNum = colNum;
+            temp = "";
             for (let i = 0; i<colNum; i++){
                 temp += " auto";
             }
-            console.log(temp)
         }
-
+        
         function createGrid(rowNum, colNum){
             getTemplateColumns(colNum);
+            let tempWidth = 800/colNum;
+            let tempHeight = 800/rowNum;
             for(let i=0; i<rowNum; i++){
                 for(let j=0; j<colNum; j++){
                     let box = document.createElement('div');
                     box.classList.add('gridElement');
-                    container.style.gridTemplateColumns = temp;
+                    //box.style.border = "1px solid black";
+                    box.style.width = tempWidth;
+                    box.style.height = tempHeight;
+
                     container.appendChild(box);
                 }
             }
+            container.style.gridTemplateColumns = temp;
+
+            const boxes = document.querySelectorAll('.gridElement');
+
+            boxes.forEach(function(box){
+                box.addEventListener('mouseover', function(){
+                    box.classList.add('activated');
+                    hoverCount++;
+                    console.log(hoverCount);
+                });
+            });
+
+            boxes.forEach(box => box.addEventListener('transitionend', removeTransition));
         }
 
         createGrid(16,16);
+
+        function clearGrid(container){
+            document.getElementById('container').innerHTML = "";
+        }
+
+        let newCols = 0;
+        let newRows = 0;
+
+        function getNewCols(){
+            newCols = prompt("Input new Column number");
+            return newCols;
+        }
+
+        function getNewRows(){
+            newRows = prompt("Input new Row number");
+            return newRows;
+        }
+
+
+        btn = document.getElementById('button');
+        btn.addEventListener('click', function(){
+            clearGrid();
+            getNewCols();
+            getNewRows();
+            createGrid(newRows, newCols);
+            console.log(temp)
+        })
 
         function removeTransition(e){
             e.target.classList.remove('activated');
         }
 
-        const boxes = document.querySelectorAll('.gridElement');
 
-        boxes.forEach(function(box){
-            box.addEventListener('mouseover', function(){
-                box.classList.add('activated');
-            });
-        });
-
-        boxes.forEach(box => box.addEventListener('transitionend', removeTransition));
     </script>
 </html>
